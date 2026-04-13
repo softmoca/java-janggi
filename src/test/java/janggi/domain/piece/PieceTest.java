@@ -53,4 +53,17 @@ class PieceTest {
         Piece piece = new EmptyPosition(Team.OTHER);
         assertThat(piece.score()).isEqualTo(0);
     }
+
+    @Test
+    void 각_기물은_자신의_타입을_알고_있다() {
+        assertThat(new Tank(Team.HAN).pieceType()).isEqualTo(PieceType.TANK);
+        assertThat(new Horse(Team.HAN).pieceType()).isEqualTo(PieceType.HORSE);
+        assertThat(new Elephant(Team.HAN).pieceType()).isEqualTo(PieceType.ELEPHANT);
+        assertThat(new Advisor(Team.HAN).pieceType()).isEqualTo(PieceType.ADVISOR);
+        assertThat(new King(Team.HAN).pieceType()).isEqualTo(PieceType.KING);
+        assertThat(new Cannon(Team.HAN).pieceType()).isEqualTo(PieceType.CANNON);
+        assertThat(new Soldier(Team.HAN).pieceType()).isEqualTo(PieceType.SOLDIER);
+    }
+
+
 }

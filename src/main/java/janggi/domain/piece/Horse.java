@@ -24,4 +24,9 @@ public class Horse extends Piece {
         return 5;
     }
 
+    @Override
+    public PieceType pieceType() {
+        return PieceType.HORSE;
+    }
+
 }

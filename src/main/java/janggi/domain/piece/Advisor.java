@@ -24,4 +24,10 @@ public class Advisor extends Piece {
         return 3;
     }
 
+    @Override
+    public PieceType pieceType() {
+        return PieceType.ADVISOR;
+    }
+
 }
+

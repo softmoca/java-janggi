@@ -23,4 +23,10 @@ public class Elephant extends Piece {
     public int score() {
         return 3;
     }
+
+    @Override
+    public PieceType pieceType() {
+        return PieceType.ELEPHANT;
+    }
+
 }

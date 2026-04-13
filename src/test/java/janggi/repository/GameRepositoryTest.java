@@ -36,7 +36,7 @@ class GameRepositoryTest {
         JanggiGame game = gameRepository.save(new JanggiGame());
         game.changeTurn();
 
-        gameRepository.updateTurn(game);
+        gameRepository.update(game);
         JanggiGame found = gameRepository.findById(game.findGameId());
 
         assertThat(found.findCurrentTeam()).isEqualTo(Team.HAN);
@@ -47,7 +47,7 @@ class GameRepositoryTest {
         JanggiGame game = gameRepository.save(new JanggiGame());
         game.processCaptured(new King(Team.HAN));
 
-        gameRepository.updateFinished(game);
+        gameRepository.update(game);
 
         JanggiGame found = gameRepository.findById(game.findGameId());
         assertThat(found.isFinished()).isTrue();
@@ -60,7 +60,7 @@ class GameRepositoryTest {
         JanggiGame game2 = gameRepository.save(new JanggiGame());
 
         game2.processCaptured(new King(Team.HAN));
-        gameRepository.updateFinished(game2);
+        gameRepository.update(game2);
 
         List<JanggiGame> playingGames = gameRepository.findPlayingGames();
 

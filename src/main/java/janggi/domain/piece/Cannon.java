@@ -23,4 +23,9 @@ public class Cannon extends Piece {
     public int score() {
         return 7;
     }
+
+    @Override
+    public PieceType pieceType() {
+        return PieceType.CANNON;
+    }
 }

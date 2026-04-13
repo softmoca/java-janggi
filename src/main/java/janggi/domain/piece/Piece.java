@@ -39,4 +39,7 @@ public abstract class Piece {
 
     public abstract int score();
 
+    public abstract PieceType pieceType();
+
+
 }

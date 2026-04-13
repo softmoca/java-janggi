@@ -23,4 +23,9 @@ public class Soldier extends Piece {
     public int score() {
         return 2;
     }
+
+    @Override
+    public PieceType pieceType() {
+        return PieceType.SOLDIER;
+    }
 }

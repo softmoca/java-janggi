@@ -32,7 +32,7 @@ public class PieceRepository {
                 pstmt.setLong(1, gameId);
                 pstmt.setInt(2, position.getRow());
                 pstmt.setInt(3, position.getCol());
-                pstmt.setString(4, PieceType.from(piece).name());
+                pstmt.setString(4, piece.pieceType().name());
                 pstmt.setString(5, piece.findTeam().name());
                 pstmt.executeUpdate();
             }

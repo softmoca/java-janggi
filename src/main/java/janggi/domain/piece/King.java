@@ -23,4 +23,9 @@ public class King extends Piece {
     public int score() {
         return 0;
     }
+
+    @Override
+    public PieceType pieceType() {
+        return PieceType.KING;
+    }
 }

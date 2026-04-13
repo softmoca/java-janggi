@@ -23,4 +23,10 @@ public class Tank extends Piece {
     public int score() {
         return 13;
     }
+
+    @Override
+    public PieceType pieceType() {
+        return PieceType.TANK;
+    }
+
 }
