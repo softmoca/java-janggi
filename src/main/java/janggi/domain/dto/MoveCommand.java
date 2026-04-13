@@ -1,5 +1,6 @@
 package janggi.domain.dto;
 
+import janggi.domain.vo.BoardSize;
 import janggi.domain.vo.Position;
 
 public class MoveCommand {
@@ -14,6 +15,9 @@ public class MoveCommand {
     public static MoveCommand from(int[] input) {
         Position from = new Position(input[0], input[1]);
         Position to = new Position(input[2], input[3]);
+
+        BoardSize.JANGGI.validateContains(from);
+        BoardSize.JANGGI.validateContains(to);
 
         if (from.equals(to)) {
             throw new IllegalArgumentException("제자리 이동은 안됩니다.");

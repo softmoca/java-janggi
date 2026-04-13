@@ -2,11 +2,10 @@ package janggi.view;
 
 import janggi.domain.BoardView;
 import janggi.domain.piece.Team;
+import janggi.domain.vo.BoardSize;
 import janggi.domain.vo.Position;
 
 public class OutputView {
-    private static final int ROW_SIZE = 10;
-    private static final int COL_SIZE = 9;
 
     public void printGameStart(Long gameId) {
         System.out.println("게임 " + gameId + "을(를) 시작합니다.");
@@ -37,7 +36,7 @@ public class OutputView {
     public void printBoard(BoardView board) {
         System.out.println();
         printColumnHeader();
-        for (int row = 0; row < ROW_SIZE; row++) {
+        for (int row = 0; row < BoardSize.JANGGI.getRowCount(); row++) {
             printRow(board, row);
         }
         System.out.println();
@@ -45,7 +44,7 @@ public class OutputView {
 
     private void printColumnHeader() {
         StringBuilder sb = new StringBuilder("  ");
-        for (int col = 0; col < COL_SIZE; col++) {
+        for (int col = 0; col < BoardSize.JANGGI.getColCount(); col++) {
             sb.append("  ").append(col).append(" ");
         }
         System.out.println(sb);
@@ -54,11 +53,10 @@ public class OutputView {
     private void printRow(BoardView board, int row) {
         StringBuilder sb = new StringBuilder();
         sb.append(row).append(" ");
-        for (int col = 0; col < COL_SIZE; col++) {
+        for (int col = 0; col < BoardSize.JANGGI.getColCount(); col++) {
             String display = board.findByPosition(new Position(row, col)).display();
             sb.append("[").append(display).append("]");
         }
         System.out.println(sb);
     }
-
 }

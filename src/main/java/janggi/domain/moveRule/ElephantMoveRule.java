@@ -1,6 +1,7 @@
 package janggi.domain.moveRule;
 
 import janggi.domain.BoardView;
+import janggi.domain.vo.BoardSize;
 import janggi.domain.vo.Position;
 import java.util.List;
 
@@ -39,10 +40,9 @@ public class ElephantMoveRule implements MoveRule {
     }
 
     private boolean isBlockClear(int row, int col, BoardView board) {
-        return isInBounds(row, col) && board.isEmptyPosition(new Position(row, col));
+        Position position = new Position(row, col);
+        return BoardSize.JANGGI.contains(position)
+                && board.isEmptyPosition(position);
     }
 
-    private boolean isInBounds(int row, int col) {
-        return row >= 0 && row <= 9 && col >= 0 && col <= 8;
-    }
 }

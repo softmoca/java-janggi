@@ -10,12 +10,11 @@ import janggi.domain.piece.Piece;
 import janggi.domain.piece.Soldier;
 import janggi.domain.piece.Tank;
 import janggi.domain.piece.Team;
+import janggi.domain.vo.BoardSize;
 import java.util.ArrayList;
 import java.util.List;
 
 public class BoardInitializer {
-    private static final int ROW_LEN = 10;
-    private static final int COL_LEN = 9;
 
     private static final List<Integer> soldierCol = List.of(0, 2, 4, 6, 8);
     private static final List<Integer> cannonCol = List.of(1, 7);
@@ -46,12 +45,15 @@ public class BoardInitializer {
     }
 
     private static void initBoard(List<List<Piece>> board) {
-        for (int row = 0; row < ROW_LEN; row++) {
+        int rowCount = BoardSize.JANGGI.getRowCount();
+        int colCount = BoardSize.JANGGI.getColCount();
+
+        for (int row = 0; row < rowCount; row++) {
             board.add(new ArrayList<>());
         }
 
-        for (int row = 0; row < ROW_LEN; row++) {
-            for (int col = 0; col < COL_LEN; col++) {
+        for (int row = 0; row < rowCount; row++) {
+            for (int col = 0; col < colCount; col++) {
                 board.get(row).add(new EmptyPosition(Team.OTHER));
             }
         }
@@ -103,5 +105,4 @@ public class BoardInitializer {
             board.get(9).set(col, new Tank(Team.CHO));
         }
     }
-
 }

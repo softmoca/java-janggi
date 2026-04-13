@@ -1,6 +1,7 @@
 package janggi.domain.moveRule;
 
 import janggi.domain.BoardView;
+import janggi.domain.vo.BoardSize;
 import janggi.domain.vo.Position;
 import java.util.List;
 
@@ -34,13 +35,10 @@ public class HorseMoveRule implements MoveRule {
     }
 
     private boolean isNotBlocked(Position from, int[] pattern, BoardView board) {
-        int blockRow = from.getRow() + pattern[2];
-        int blockCol = from.getCol() + pattern[3];
-        return isInBounds(blockRow, blockCol)
-                && board.isEmptyPosition(new Position(blockRow, blockCol));
-    }
-
-    private boolean isInBounds(int row, int col) {
-        return row >= 0 && row <= 9 && col >= 0 && col <= 8;
+        Position blockPosition = new Position(
+                from.getRow() + pattern[2],
+                from.getCol() + pattern[3]);
+        return BoardSize.JANGGI.contains(blockPosition)
+                && board.isEmptyPosition(blockPosition);
     }
 }
