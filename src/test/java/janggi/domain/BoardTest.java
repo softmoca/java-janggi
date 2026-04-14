@@ -3,11 +3,8 @@ package janggi.domain;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import janggi.domain.piece.Cannon;
-import janggi.domain.piece.King;
 import janggi.domain.piece.Piece;
-import janggi.domain.piece.Soldier;
-import janggi.domain.piece.Tank;
+import janggi.domain.piece.PieceFactory;
 import janggi.domain.piece.Team;
 import janggi.domain.vo.Position;
 import java.util.Map;
@@ -24,7 +21,7 @@ public class BoardTest {
         Piece piece = board.findByPosition(position).orElseThrow();
 
         assertThat(piece.findTeam()).isEqualTo(Team.HAN);
-        assertThat(piece).isInstanceOf(King.class);
+        assertThat(piece).isEqualTo(PieceFactory.king(Team.HAN));
     }
 
     @Test
@@ -43,21 +40,21 @@ public class BoardTest {
     @Test
     void 이동시_잡힌_기물을_반환한다() {
         Board board = Board.of(Map.of(
-                new Position(0, 0), new Tank(Team.HAN),
-                new Position(0, 3), new Soldier(Team.CHO)
+                new Position(0, 0), PieceFactory.tank(Team.HAN),
+                new Position(0, 3), PieceFactory.soldier(Team.CHO)
         ));
 
         Piece captured = board.move(
                 new Position(0, 0), new Position(0, 3), Team.HAN);
 
-        assertThat(captured).isInstanceOf(Soldier.class);
+        assertThat(captured).isEqualTo(PieceFactory.soldier(Team.CHO));
         assertThat(captured.findTeam()).isEqualTo(Team.CHO);
     }
 
     @Test
     void 빈칸으로_이동시_null을_반환한다() {
         Board board = Board.of(Map.of(
-                new Position(0, 0), new Tank(Team.HAN)
+                new Position(0, 0), PieceFactory.tank(Team.HAN)
         ));
 
         Piece captured = board.move(
@@ -69,9 +66,9 @@ public class BoardTest {
     @Test
     void 특정_진영의_점수를_계산한다() {
         Board board = Board.of(Map.of(
-                new Position(0, 0), new Tank(Team.HAN),
-                new Position(3, 4), new Soldier(Team.HAN),
-                new Position(9, 0), new Cannon(Team.CHO)
+                new Position(0, 0), PieceFactory.tank(Team.HAN),
+                new Position(3, 4), PieceFactory.soldier(Team.HAN),
+                new Position(9, 0), PieceFactory.cannon(Team.CHO)
         ));
 
         assertThat(board.calculateScore(Team.HAN)).isEqualTo(15);
@@ -81,7 +78,7 @@ public class BoardTest {
     @Test
     void 이동_후_출발지점은_빈칸이_된다() {
         Board board = Board.of(Map.of(
-                new Position(0, 0), new Tank(Team.HAN)
+                new Position(0, 0), PieceFactory.tank(Team.HAN)
         ));
 
         board.move(new Position(0, 0), new Position(0, 3), Team.HAN);

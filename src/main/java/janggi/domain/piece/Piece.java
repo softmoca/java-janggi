@@ -5,11 +5,18 @@ import janggi.domain.moveRule.MoveRule;
 import janggi.domain.palace.Palaces;
 import janggi.domain.vo.Position;
 
-public abstract class Piece {
-    private final Team team;
+public class Piece {
 
-    public Piece(Team team) {
+    private final Team team;
+    private final PieceType type;
+    private final MoveRule moveRule;
+    private final int score;
+
+    public Piece(Team team, PieceType type, MoveRule moveRule, int score) {
         this.team = team;
+        this.type = type;
+        this.moveRule = moveRule;
+        this.score = score;
     }
 
     public boolean isSameTeam(Team otherTeam) {
@@ -20,20 +27,24 @@ public abstract class Piece {
         return team;
     }
 
-    public boolean canMove(Position from, Position to, BoardView board, Palaces palaces) {
-        return moveRule().canMove(from, to, board, palaces);
+    public PieceType pieceType() {
+        return type;
     }
 
-    protected abstract MoveRule moveRule();
+    public int score() {
+        return score;
+    }
+
+    public boolean canMove(Position from, Position to, BoardView board, Palaces palaces) {
+        return moveRule.canMove(from, to, board, palaces);
+    }
 
     public String display() {
-        return team.findPrefix() + toString();
+        return team.findPrefix() + type.koreanName();
     }
 
     @Override
-    public abstract String toString();
-
-    public abstract int score();
-
-    public abstract PieceType pieceType();
+    public String toString() {
+        return type.koreanName();
+    }
 }

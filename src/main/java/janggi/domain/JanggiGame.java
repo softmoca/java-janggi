@@ -1,7 +1,7 @@
 package janggi.domain;
 
-import janggi.domain.piece.King;
 import janggi.domain.piece.Piece;
+import janggi.domain.piece.PieceType;
 import janggi.domain.piece.Team;
 
 public class JanggiGame {
@@ -47,7 +47,7 @@ public class JanggiGame {
     }
 
     public void processCaptured(Piece capturedPiece) {
-        if (!(capturedPiece instanceof King)) {
+        if (capturedPiece == null || capturedPiece.pieceType() != PieceType.KING) {
             return;
         }
         isFinished = true;

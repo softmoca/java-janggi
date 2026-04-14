@@ -5,8 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import janggi.domain.Board;
 import janggi.domain.JanggiGame;
 import janggi.domain.piece.Piece;
-import janggi.domain.piece.Soldier;
-import janggi.domain.piece.Tank;
+import janggi.domain.piece.PieceFactory;
 import janggi.domain.piece.Team;
 import janggi.domain.vo.Position;
 import janggi.infrastructure.DBInitializer;
@@ -40,7 +39,7 @@ class PieceRepositoryTest {
     @Test
     void 기물이동을_DB에_반영한다() {
         Board board = Board.of(Map.of(
-                new Position(0, 0), new Tank(Team.HAN)
+                new Position(0, 0), PieceFactory.tank(Team.HAN)
         ));
         JanggiGame game = gameRepository.save(new JanggiGame());
         pieceRepository.saveAll(game.findGameId(), board);
@@ -57,8 +56,8 @@ class PieceRepositoryTest {
     @Test
     void 상대_기물을_잡으며_이동하면_잡힌_기물이_삭제된다() {
         Board board = Board.of(Map.of(
-                new Position(0, 0), new Tank(Team.HAN),
-                new Position(0, 3), new Soldier(Team.CHO)
+                new Position(0, 0), PieceFactory.tank(Team.HAN),
+                new Position(0, 3), PieceFactory.soldier(Team.CHO)
         ));
         JanggiGame game = gameRepository.save(new JanggiGame());
         pieceRepository.saveAll(game.findGameId(), board);
@@ -68,7 +67,7 @@ class PieceRepositoryTest {
         Board restored = pieceRepository.findByGameId(game.findGameId());
         Map<Position, Piece> pieces = restored.findAllPieces();
         assertThat(pieces).hasSize(1);
-        assertThat(pieces.get(new Position(0, 3))).isInstanceOf(Tank.class);
+        assertThat(pieces.get(new Position(0, 3))).isEqualTo(PieceFactory.tank(Team.HAN));
     }
 
 }

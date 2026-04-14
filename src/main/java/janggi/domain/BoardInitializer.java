@@ -1,13 +1,7 @@
 package janggi.domain;
 
-import janggi.domain.piece.Advisor;
-import janggi.domain.piece.Cannon;
-import janggi.domain.piece.Elephant;
-import janggi.domain.piece.Horse;
-import janggi.domain.piece.King;
 import janggi.domain.piece.Piece;
-import janggi.domain.piece.Soldier;
-import janggi.domain.piece.Tank;
+import janggi.domain.piece.PieceFactory;
 import janggi.domain.piece.Team;
 import janggi.domain.vo.Position;
 import java.util.HashMap;
@@ -40,8 +34,8 @@ public class BoardInitializer {
         placeBackRank(pieces, HAN_BACK_ROW, Team.HAN);
         placeBackRank(pieces, CHO_BACK_ROW, Team.CHO);
 
-        pieces.put(new Position(HAN_KING_ROW, KING_COL), new King(Team.HAN));
-        pieces.put(new Position(CHO_KING_ROW, KING_COL), new King(Team.CHO));
+        pieces.put(new Position(HAN_KING_ROW, KING_COL), PieceFactory.king(Team.HAN));
+        pieces.put(new Position(CHO_KING_ROW, KING_COL), PieceFactory.king(Team.CHO));
 
         placeCannons(pieces, HAN_CANNON_ROW, Team.HAN);
         placeCannons(pieces, CHO_CANNON_ROW, Team.CHO);
@@ -54,28 +48,28 @@ public class BoardInitializer {
 
     private static void placeBackRank(Map<Position, Piece> pieces, int row, Team team) {
         for (int col : TANK_COLS) {
-            pieces.put(new Position(row, col), new Tank(team));
+            pieces.put(new Position(row, col), PieceFactory.tank(team));
         }
         for (int col : HORSE_COLS) {
-            pieces.put(new Position(row, col), new Horse(team));
+            pieces.put(new Position(row, col), PieceFactory.horse(team));
         }
         for (int col : ELEPHANT_COLS) {
-            pieces.put(new Position(row, col), new Elephant(team));
+            pieces.put(new Position(row, col), PieceFactory.elephant(team));
         }
         for (int col : ADVISOR_COLS) {
-            pieces.put(new Position(row, col), new Advisor(team));
+            pieces.put(new Position(row, col), PieceFactory.advisor(team));
         }
     }
 
     private static void placeCannons(Map<Position, Piece> pieces, int row, Team team) {
         for (int col : CANNON_COLS) {
-            pieces.put(new Position(row, col), new Cannon(team));
+            pieces.put(new Position(row, col), PieceFactory.cannon(team));
         }
     }
 
     private static void placeSoldiers(Map<Position, Piece> pieces, int row, Team team) {
         for (int col : SOLDIER_COLS) {
-            pieces.put(new Position(row, col), new Soldier(team));
+            pieces.put(new Position(row, col), PieceFactory.soldier(team));
         }
     }
 }

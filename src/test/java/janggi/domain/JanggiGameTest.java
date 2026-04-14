@@ -2,8 +2,8 @@ package janggi.domain;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import janggi.domain.piece.King;
-import janggi.domain.piece.Soldier;
+import janggi.domain.piece.Piece;
+import janggi.domain.piece.PieceFactory;
 import janggi.domain.piece.Team;
 import org.junit.jupiter.api.Test;
 
@@ -25,8 +25,7 @@ class JanggiGameTest {
     @Test
     void 왕이_잡히면_게임이_종료된다() {
         JanggiGame game = new JanggiGame();
-        King capturedKing = new King(Team.HAN);
-
+        Piece capturedKing = PieceFactory.king(Team.HAN);
         game.processCaptured(capturedKing);
 
         assertThat(game.isFinished()).isTrue();
@@ -35,18 +34,17 @@ class JanggiGameTest {
     @Test
     void 왕이_잡히면_상대_진영이_승자다() {
         JanggiGame game = new JanggiGame();
-        King capturedKing = new King(Team.HAN);
+        Piece capturedKing = PieceFactory.king(Team.HAN);
 
         game.processCaptured(capturedKing);
 
         assertThat(game.findWinner()).isEqualTo(Team.CHO);
     }
 
-    // PR
     @Test
     void 일반_기물이_잡혀도_게임은_계속된다() {
         JanggiGame game = new JanggiGame();
-        Soldier capturedSoldier = new Soldier(Team.HAN);
+        Piece capturedSoldier = PieceFactory.soldier(Team.HAN);
 
         game.processCaptured(capturedSoldier);
 

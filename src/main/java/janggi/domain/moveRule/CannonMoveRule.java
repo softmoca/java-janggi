@@ -2,8 +2,8 @@ package janggi.domain.moveRule;
 
 import janggi.domain.BoardView;
 import janggi.domain.palace.Palaces;
-import janggi.domain.piece.Cannon;
 import janggi.domain.piece.Piece;
+import janggi.domain.piece.PieceType;
 import janggi.domain.vo.Position;
 import java.util.Optional;
 
@@ -117,6 +117,6 @@ public class CannonMoveRule implements MoveRule {
     }
 
     private boolean isCannon(Piece piece) {
-        return piece instanceof Cannon;
+        return piece.pieceType() == PieceType.CANNON;
     }
 }

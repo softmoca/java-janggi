@@ -3,7 +3,7 @@ package janggi.repository;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import janggi.domain.JanggiGame;
-import janggi.domain.piece.King;
+import janggi.domain.piece.PieceFactory;
 import janggi.domain.piece.Team;
 import janggi.infrastructure.DBInitializer;
 import java.util.List;
@@ -45,7 +45,7 @@ class GameRepositoryTest {
     @Test
     void 게임_종료_후_갱신한다() {
         JanggiGame game = gameRepository.save(new JanggiGame());
-        game.processCaptured(new King(Team.HAN));
+        game.processCaptured(PieceFactory.king(Team.HAN));
 
         gameRepository.update(game);
 
@@ -59,7 +59,7 @@ class GameRepositoryTest {
         JanggiGame game1 = gameRepository.save(new JanggiGame());
         JanggiGame game2 = gameRepository.save(new JanggiGame());
 
-        game2.processCaptured(new King(Team.HAN));
+        game2.processCaptured(PieceFactory.king(Team.HAN));
         gameRepository.update(game2);
 
         List<JanggiGame> playingGames = gameRepository.findPlayingGames();

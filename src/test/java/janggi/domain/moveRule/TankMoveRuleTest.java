@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import janggi.domain.Board;
 import janggi.domain.palace.Palaces;
-import janggi.domain.piece.Soldier;
+import janggi.domain.piece.PieceFactory;
 import janggi.domain.piece.Team;
 import janggi.domain.vo.Position;
 import java.util.Map;
@@ -45,7 +45,7 @@ class TankMoveRuleTest {
     @Test
     void 중간_경로에_기물이_있으면_예외가_발생한다() {
         Board board = Board.of(Map.of(
-                new Position(0, 2), new Soldier(Team.HAN)
+                new Position(0, 2), PieceFactory.soldier(Team.HAN)
         ));
 
         from = new Position(0, 0);
@@ -74,7 +74,7 @@ class TankMoveRuleTest {
     @Test
     void 궁성_2칸_대각선_경로에_기물_있으면_이동_불가() {
         Board board = Board.of(Map.of(
-                new Position(1, 4), new Soldier(Team.HAN)
+                new Position(1, 4), PieceFactory.soldier(Team.HAN)
         ));
         from = new Position(0, 3);
         to = new Position(2, 5);

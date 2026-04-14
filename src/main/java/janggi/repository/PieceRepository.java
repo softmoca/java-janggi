@@ -2,6 +2,7 @@ package janggi.repository;
 
 import janggi.domain.Board;
 import janggi.domain.piece.Piece;
+import janggi.domain.piece.PieceFactory;
 import janggi.domain.piece.PieceType;
 import janggi.domain.piece.Team;
 import janggi.domain.vo.Position;
@@ -53,7 +54,7 @@ public class PieceRepository {
                 Position position = new Position(rs.getInt("row_pos"), rs.getInt("col_pos"));
                 PieceType pieceType = PieceType.valueOf(rs.getString("piece_type"));
                 Team team = Team.valueOf(rs.getString("team"));
-                Piece piece = pieceType.createPiece(team);
+                Piece piece = PieceFactory.of(pieceType, team);
                 pieces.put(position, piece);
             }
             return Board.of(pieces);
