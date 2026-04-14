@@ -11,36 +11,17 @@ import janggi.domain.piece.Piece;
 import janggi.domain.piece.Soldier;
 import janggi.domain.piece.Tank;
 import janggi.domain.piece.Team;
-import java.util.Collection;
-import java.util.List;
+import janggi.domain.vo.Position;
+import java.util.Map;
 import org.junit.jupiter.api.Test;
 
 class BoardInitializerTest {
-    private List<List<Piece>> board = BoardInitializer.createBoard();
+
+    private final Map<Position, Piece> pieces = BoardInitializer.createInitialPieces();
 
     @Test
-    void 보드_크기는_10개의_행과_9개의_열로_이루어진다() {
-        int rowLength = board.size();
-        int colLength = board.get(0).size();
-
-        assertThat(rowLength).isEqualTo(10);
-        assertThat(colLength).isEqualTo(9);
-    }
-
-    @Test
-    void 장기판은_32개의_기물과_58개의_빈칸이_있다() {
-        int emptyPositionCount = Math.toIntExact(board.stream()
-                .flatMap(Collection::stream)
-                .filter(Piece::isEmpty)
-                .count());
-
-        int pieceCount = Math.toIntExact(board.stream()
-                .flatMap(Collection::stream)
-                .filter((piece) -> !piece.isEmpty())
-                .count());
-
-        assertThat(emptyPositionCount).isEqualTo(58);
-        assertThat(pieceCount).isEqualTo(32);
+    void 초기_배치는_32개의_기물을_가진다() {
+        assertThat(pieces).hasSize(32);
     }
 
     @Test
@@ -66,13 +47,11 @@ class BoardInitializerTest {
     }
 
     private void assertTeamPieceCount(Team team, Class<? extends Piece> pieceClass, int expected) {
-        long count = board.stream()
-                .flatMap(Collection::stream)
+        long count = pieces.values().stream()
                 .filter(piece -> piece.findTeam() == team)
                 .filter(pieceClass::isInstance)
                 .count();
 
         assertThat(count).isEqualTo(expected);
     }
-
 }

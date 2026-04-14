@@ -3,106 +3,79 @@ package janggi.domain;
 import janggi.domain.piece.Advisor;
 import janggi.domain.piece.Cannon;
 import janggi.domain.piece.Elephant;
-import janggi.domain.piece.EmptyPosition;
 import janggi.domain.piece.Horse;
 import janggi.domain.piece.King;
 import janggi.domain.piece.Piece;
 import janggi.domain.piece.Soldier;
 import janggi.domain.piece.Tank;
 import janggi.domain.piece.Team;
-import janggi.domain.vo.BoardSize;
-import java.util.ArrayList;
+import janggi.domain.vo.Position;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class BoardInitializer {
 
-    private static final List<Integer> soldierCol = List.of(0, 2, 4, 6, 8);
-    private static final List<Integer> cannonCol = List.of(1, 7);
-    private static final List<Integer> tankCol = List.of(0, 8);
-    private static final List<Integer> horseCol = List.of(1, 7);
-    private static final List<Integer> elephantCol = List.of(2, 6);
-    private static final List<Integer> advisorCol = List.of(3, 5);
-    private static final int kingCol = 4;
+    private static final List<Integer> SOLDIER_COLS = List.of(0, 2, 4, 6, 8);
+    private static final List<Integer> CANNON_COLS = List.of(1, 7);
+    private static final List<Integer> TANK_COLS = List.of(0, 8);
+    private static final List<Integer> HORSE_COLS = List.of(1, 7);
+    private static final List<Integer> ELEPHANT_COLS = List.of(2, 6);
+    private static final List<Integer> ADVISOR_COLS = List.of(3, 5);
+    private static final int KING_COL = 4;
 
-    public static List<List<Piece>> createBoard() {
-        List<List<Piece>> board = createEmptyBoard();
+    private static final int HAN_BACK_ROW = 0;
+    private static final int HAN_KING_ROW = 1;
+    private static final int HAN_CANNON_ROW = 2;
+    private static final int HAN_SOLDIER_ROW = 3;
 
-        initTank(board);
-        initHorse(board);
-        initElephant(board);
-        initAdvisor(board);
+    private static final int CHO_SOLDIER_ROW = 6;
+    private static final int CHO_CANNON_ROW = 7;
+    private static final int CHO_KING_ROW = 8;
+    private static final int CHO_BACK_ROW = 9;
 
-        initKing(board);
-        initCannon(board);
-        initSoldier(board);
-        return board;
+    public static Map<Position, Piece> createInitialPieces() {
+        Map<Position, Piece> pieces = new HashMap<>();
+
+        placeBackRank(pieces, HAN_BACK_ROW, Team.HAN);
+        placeBackRank(pieces, CHO_BACK_ROW, Team.CHO);
+
+        pieces.put(new Position(HAN_KING_ROW, KING_COL), new King(Team.HAN));
+        pieces.put(new Position(CHO_KING_ROW, KING_COL), new King(Team.CHO));
+
+        placeCannons(pieces, HAN_CANNON_ROW, Team.HAN);
+        placeCannons(pieces, CHO_CANNON_ROW, Team.CHO);
+
+        placeSoldiers(pieces, HAN_SOLDIER_ROW, Team.HAN);
+        placeSoldiers(pieces, CHO_SOLDIER_ROW, Team.CHO);
+
+        return pieces;
     }
 
-    public static List<List<Piece>> createEmptyBoard() {
-        List<List<Piece>> board = new ArrayList<>();
-        initBoard(board);
-        return board;
-    }
-
-    private static void initBoard(List<List<Piece>> board) {
-        int rowCount = BoardSize.JANGGI.getRowCount();
-        int colCount = BoardSize.JANGGI.getColCount();
-
-        for (int row = 0; row < rowCount; row++) {
-            board.add(new ArrayList<>());
+    private static void placeBackRank(Map<Position, Piece> pieces, int row, Team team) {
+        for (int col : TANK_COLS) {
+            pieces.put(new Position(row, col), new Tank(team));
         }
-
-        for (int row = 0; row < rowCount; row++) {
-            for (int col = 0; col < colCount; col++) {
-                board.get(row).add(new EmptyPosition(Team.OTHER));
-            }
+        for (int col : HORSE_COLS) {
+            pieces.put(new Position(row, col), new Horse(team));
         }
-    }
-
-    private static void initSoldier(List<List<Piece>> board) {
-        for (int col : soldierCol) {
-            board.get(3).set(col, new Soldier(Team.HAN));
-            board.get(6).set(col, new Soldier(Team.CHO));
+        for (int col : ELEPHANT_COLS) {
+            pieces.put(new Position(row, col), new Elephant(team));
         }
-    }
-
-    private static void initCannon(List<List<Piece>> board) {
-        for (int col : cannonCol) {
-            board.get(2).set(col, new Cannon(Team.HAN));
-            board.get(7).set(col, new Cannon(Team.CHO));
+        for (int col : ADVISOR_COLS) {
+            pieces.put(new Position(row, col), new Advisor(team));
         }
     }
 
-    private static void initKing(List<List<Piece>> board) {
-        board.get(1).set(kingCol, new King(Team.HAN));
-        board.get(8).set(kingCol, new King(Team.CHO));
-    }
-
-    private static void initAdvisor(List<List<Piece>> board) {
-        for (int col : advisorCol) {
-            board.get(0).set(col, new Advisor(Team.HAN));
-            board.get(9).set(col, new Advisor(Team.CHO));
+    private static void placeCannons(Map<Position, Piece> pieces, int row, Team team) {
+        for (int col : CANNON_COLS) {
+            pieces.put(new Position(row, col), new Cannon(team));
         }
     }
 
-    private static void initElephant(List<List<Piece>> board) {
-        for (int col : elephantCol) {
-            board.get(0).set(col, new Elephant(Team.HAN));
-            board.get(9).set(col, new Elephant(Team.CHO));
-        }
-    }
-
-    private static void initHorse(List<List<Piece>> board) {
-        for (int col : horseCol) {
-            board.get(0).set(col, new Horse(Team.HAN));
-            board.get(9).set(col, new Horse(Team.CHO));
-        }
-    }
-
-    private static void initTank(List<List<Piece>> board) {
-        for (int col : tankCol) {
-            board.get(0).set(col, new Tank(Team.HAN));
-            board.get(9).set(col, new Tank(Team.CHO));
+    private static void placeSoldiers(Map<Position, Piece> pieces, int row, Team team) {
+        for (int col : SOLDIER_COLS) {
+            pieces.put(new Position(row, col), new Soldier(team));
         }
     }
 }

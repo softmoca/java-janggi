@@ -73,5 +73,28 @@ public class BoardTest {
         assertThat(board.calculateScore(Team.HAN)).isEqualTo(15);
         assertThat(board.calculateScore(Team.CHO)).isEqualTo(7);
     }
-    
+
+
+    @Test
+    void 이동_후_출발지점은_빈칸이_된다() {
+        Board board = Board.of(Map.of(
+                new Position(0, 0), new Tank(Team.HAN)
+        ));
+
+        board.move(new Position(0, 0), new Position(0, 3), Team.HAN);
+
+        assertThat(board.isEmptyPosition(new Position(0, 0))).isTrue();
+        assertThat(board.isEmptyPosition(new Position(0, 3))).isFalse();
+    }
+
+    @Test
+    void 전체_기물_조회시_빈칸은_포함되지_않는다() {
+        Map<Position, Piece> pieces = board.findAllPieces();
+
+        assertThat(pieces).hasSize(32);
+        assertThat(pieces.values())
+                .allMatch(piece -> !piece.isEmpty());
+    }
+
+
 }

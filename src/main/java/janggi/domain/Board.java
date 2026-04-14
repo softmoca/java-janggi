@@ -6,44 +6,40 @@ import janggi.domain.piece.Piece;
 import janggi.domain.piece.Team;
 import janggi.domain.vo.Position;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class Board implements BoardView {
-    private final List<List<Piece>> board;
+
+    private static final Piece EMPTY = new EmptyPosition(Team.OTHER);
+
+    private final Map<Position, Piece> pieces;
     private final Palaces palaces;
 
     public Board() {
-        this(BoardInitializer.createBoard(), Palaces.standard());
+        this(BoardInitializer.createInitialPieces(), Palaces.standard());
     }
 
-    private Board(List<List<Piece>> board, Palaces palaces) {
-        this.board = board;
+    private Board(Map<Position, Piece> pieces, Palaces palaces) {
+        this.pieces = new HashMap<>(pieces);
         this.palaces = palaces;
     }
 
     public static Board empty() {
-        return new Board(BoardInitializer.createEmptyBoard(), Palaces.standard());
+        return new Board(new HashMap<>(), Palaces.standard());
     }
 
     public static Board of(Map<Position, Piece> pieces) {
-        Board board = Board.empty();
-        for (Map.Entry<Position, Piece> entry : pieces.entrySet()) {
-            board.place(entry.getKey(), entry.getValue());
-        }
-        return board;
+        return new Board(pieces, Palaces.standard());
     }
 
     @Override
     public Piece findByPosition(Position position) {
-        int row = position.getRow();
-        int col = position.getCol();
-        return board.get(row).get(col);
+        return pieces.getOrDefault(position, EMPTY);
     }
 
     @Override
     public boolean isEmptyPosition(Position position) {
-        return findByPosition(position).isEmpty();
+        return !pieces.containsKey(position);
     }
 
     public Palaces palaces() {
@@ -60,24 +56,19 @@ public class Board implements BoardView {
             throw new IllegalArgumentException("해당 기물의 이동 규칙에 맞지 않습니다.");
         }
 
-        place(from, new EmptyPosition(Team.OTHER));
-        place(to, fromPiece);
+        pieces.remove(from);
+        pieces.put(to, fromPiece);
 
         return toPiece;
     }
 
-    private void place(Position position, Piece piece) {
-        List<Piece> row = board.get(position.getRow());
-        row.set(position.getCol(), piece);
-    }
-
     private void validateCommonMove(Team currentTeam, Piece fromPiece, Piece toPiece) {
-        if (!fromPiece.isSameTeam(currentTeam)) {
-            throw new IllegalArgumentException("자신 진영의 기물을 선택해야합니다.");
-        }
-
         if (fromPiece.isEmpty()) {
             throw new IllegalArgumentException("[ERROR] 선택하신 칸에 기물이 없습니다.");
+        }
+
+        if (!fromPiece.isSameTeam(currentTeam)) {
+            throw new IllegalArgumentException("자신 진영의 기물을 선택해야합니다.");
         }
 
         if (toPiece.isSameTeam(currentTeam)) {
@@ -86,28 +77,13 @@ public class Board implements BoardView {
     }
 
     public int calculateScore(Team team) {
-        int totalScore = 0;
-        for (List<Piece> row : board) {
-            for (Piece piece : row) {
-                if (piece.isSameTeam(team)) {
-                    totalScore += piece.score();
-                }
-            }
-        }
-        return totalScore;
+        return pieces.values().stream()
+                .filter(piece -> piece.isSameTeam(team))
+                .mapToInt(Piece::score)
+                .sum();
     }
 
     public Map<Position, Piece> findAllPieces() {
-        Map<Position, Piece> pieces = new HashMap<>();
-        for (int row = 0; row < board.size(); row++) {
-            for (int col = 0; col < board.get(row).size(); col++) {
-                Position position = new Position(row, col);
-                Piece piece = findByPosition(position);
-                if (!piece.isEmpty()) {
-                    pieces.put(position, piece);
-                }
-            }
-        }
-        return pieces;
+        return new HashMap<>(pieces);
     }
 }
