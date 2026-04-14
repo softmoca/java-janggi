@@ -64,4 +64,13 @@ class JanggiGameTest {
         assertThat(game.findWinner()).isNull();
     }
 
+    @Test
+    void 빈칸으로_이동한_경우_null이_와도_게임은_계속된다() {
+        JanggiGame game = new JanggiGame();
+
+        game.processCaptured(null);
+
+        assertThat(game.isFinished()).isFalse();
+    }
+
 }

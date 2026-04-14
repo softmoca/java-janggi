@@ -21,11 +21,17 @@ public class BoardTest {
     void 특정_좌표의_기물을_찾는다() {
         Position position = new Position(1, 4);
 
-        Piece piece = board.findByPosition(position);
-        Team team = piece.findTeam();
+        Piece piece = board.findByPosition(position).orElseThrow();
 
-        assertThat(team).isEqualTo(Team.HAN);
+        assertThat(piece.findTeam()).isEqualTo(Team.HAN);
         assertThat(piece).isInstanceOf(King.class);
+    }
+
+    @Test
+    void 빈_칸_조회시_Optional_empty를_반환한다() {
+        Position position = new Position(4, 4);
+
+        assertThat(board.findByPosition(position)).isEmpty();
     }
 
     @Test
@@ -49,7 +55,7 @@ public class BoardTest {
     }
 
     @Test
-    void 빈칸으로_이동시_빈칸을_반환한다() {
+    void 빈칸으로_이동시_null을_반환한다() {
         Board board = Board.of(Map.of(
                 new Position(0, 0), new Tank(Team.HAN)
         ));
@@ -57,13 +63,11 @@ public class BoardTest {
         Piece captured = board.move(
                 new Position(0, 0), new Position(0, 3), Team.HAN);
 
-        assertThat(captured.isEmpty()).isTrue();
+        assertThat(captured).isNull();
     }
 
-    //점수 계산
     @Test
     void 특정_진영의_점수를_계산한다() {
-        // 한나라: 차(13) + 졸(2) = 15
         Board board = Board.of(Map.of(
                 new Position(0, 0), new Tank(Team.HAN),
                 new Position(3, 4), new Soldier(Team.HAN),
@@ -73,7 +77,6 @@ public class BoardTest {
         assertThat(board.calculateScore(Team.HAN)).isEqualTo(15);
         assertThat(board.calculateScore(Team.CHO)).isEqualTo(7);
     }
-
 
     @Test
     void 이동_후_출발지점은_빈칸이_된다() {
@@ -92,9 +95,5 @@ public class BoardTest {
         Map<Position, Piece> pieces = board.findAllPieces();
 
         assertThat(pieces).hasSize(32);
-        assertThat(pieces.values())
-                .allMatch(piece -> !piece.isEmpty());
     }
-
-
 }

@@ -1,11 +1,14 @@
 package janggi.view;
 
 import janggi.domain.BoardView;
+import janggi.domain.piece.Piece;
 import janggi.domain.piece.Team;
 import janggi.domain.vo.BoardSize;
 import janggi.domain.vo.Position;
 
 public class OutputView {
+
+    private static final String EMPTY_DISPLAY = "  ";
 
     public void printGameStart(Long gameId) {
         System.out.println("게임 " + gameId + "을(를) 시작합니다.");
@@ -54,7 +57,10 @@ public class OutputView {
         StringBuilder sb = new StringBuilder();
         sb.append(row).append(" ");
         for (int col = 0; col < BoardSize.JANGGI.getColCount(); col++) {
-            String display = board.findByPosition(new Position(row, col)).display();
+            Position position = new Position(row, col);
+            String display = board.findByPosition(position)
+                    .map(Piece::display)
+                    .orElse(EMPTY_DISPLAY);
             sb.append("[").append(display).append("]");
         }
         System.out.println(sb);

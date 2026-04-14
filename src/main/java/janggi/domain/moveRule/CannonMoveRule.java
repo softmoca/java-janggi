@@ -5,6 +5,7 @@ import janggi.domain.palace.Palaces;
 import janggi.domain.piece.Cannon;
 import janggi.domain.piece.Piece;
 import janggi.domain.vo.Position;
+import java.util.Optional;
 
 public class CannonMoveRule implements MoveRule {
 
@@ -24,12 +25,14 @@ public class CannonMoveRule implements MoveRule {
         if (midpoint == null) {
             return false;
         }
-        if (board.isEmptyPosition(midpoint)) {
+
+        Optional<Piece> bridgePiece = board.findByPosition(midpoint);
+        if (bridgePiece.isEmpty()) {
             return false;
         }
-        Piece bridgePiece = board.findByPosition(midpoint);
-        Piece targetPiece = board.findByPosition(to);
-        return !isCannon(bridgePiece) && !isCannon(targetPiece);
+
+        return !isCannon(bridgePiece.get())
+                && !isCannonAt(board, to);
     }
 
     private boolean canMoveStraight(Position from, Position to, BoardView board) {
@@ -43,9 +46,10 @@ public class CannonMoveRule implements MoveRule {
             return false;
         }
 
-        Piece bridgePiece = findBridgePiece(board, fromRow, fromCol, toRow, toCol);
-        Piece targetPiece = board.findByPosition(to);
-        return !isCannon(bridgePiece) && !isCannon(targetPiece);
+        Optional<Piece> bridgePiece = findBridgePiece(board, fromRow, fromCol, toRow, toCol);
+        return bridgePiece.isPresent()
+                && !isCannon(bridgePiece.get())
+                && !isCannonAt(board, to);
     }
 
     private boolean isStraightLine(Position from, Position to) {
@@ -78,18 +82,19 @@ public class CannonMoveRule implements MoveRule {
         return count;
     }
 
-    private Piece findBridgePiece(BoardView board, int fromRow, int fromCol, int toRow, int toCol) {
+    private Optional<Piece> findBridgePiece(BoardView board, int fromRow, int fromCol, int toRow, int toCol) {
         if (fromRow == toRow) {
             int start = Math.min(fromCol, toCol);
             int end = Math.max(fromCol, toCol);
 
             for (int col = start + 1; col < end; col++) {
                 Position position = new Position(fromRow, col);
-                if (!board.isEmptyPosition(position)) {
-                    return board.findByPosition(position);
+                Optional<Piece> piece = board.findByPosition(position);
+                if (piece.isPresent()) {
+                    return piece;
                 }
             }
-            return null;
+            return Optional.empty();
         }
 
         int start = Math.min(fromRow, toRow);
@@ -97,11 +102,18 @@ public class CannonMoveRule implements MoveRule {
 
         for (int row = start + 1; row < end; row++) {
             Position position = new Position(row, fromCol);
-            if (!board.isEmptyPosition(position)) {
-                return board.findByPosition(position);
+            Optional<Piece> piece = board.findByPosition(position);
+            if (piece.isPresent()) {
+                return piece;
             }
         }
-        return null;
+        return Optional.empty();
+    }
+
+    private boolean isCannonAt(BoardView board, Position position) {
+        return board.findByPosition(position)
+                .map(this::isCannon)
+                .orElse(false);
     }
 
     private boolean isCannon(Piece piece) {

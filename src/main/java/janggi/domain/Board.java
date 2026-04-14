@@ -1,16 +1,14 @@
 package janggi.domain;
 
 import janggi.domain.palace.Palaces;
-import janggi.domain.piece.EmptyPosition;
 import janggi.domain.piece.Piece;
 import janggi.domain.piece.Team;
 import janggi.domain.vo.Position;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 public class Board implements BoardView {
-
-    private static final Piece EMPTY = new EmptyPosition(Team.OTHER);
 
     private final Map<Position, Piece> pieces;
     private final Palaces palaces;
@@ -33,8 +31,8 @@ public class Board implements BoardView {
     }
 
     @Override
-    public Piece findByPosition(Position position) {
-        return pieces.getOrDefault(position, EMPTY);
+    public Optional<Piece> findByPosition(Position position) {
+        return Optional.ofNullable(pieces.get(position));
     }
 
     @Override
@@ -47,8 +45,8 @@ public class Board implements BoardView {
     }
 
     public Piece move(Position from, Position to, Team currentTeam) {
-        Piece fromPiece = findByPosition(from);
-        Piece toPiece = findByPosition(to);
+        Piece fromPiece = pieces.get(from);
+        Piece toPiece = pieces.get(to);
 
         validateCommonMove(currentTeam, fromPiece, toPiece);
 
@@ -63,7 +61,7 @@ public class Board implements BoardView {
     }
 
     private void validateCommonMove(Team currentTeam, Piece fromPiece, Piece toPiece) {
-        if (fromPiece.isEmpty()) {
+        if (fromPiece == null) {
             throw new IllegalArgumentException("[ERROR] 선택하신 칸에 기물이 없습니다.");
         }
 
@@ -71,7 +69,7 @@ public class Board implements BoardView {
             throw new IllegalArgumentException("자신 진영의 기물을 선택해야합니다.");
         }
 
-        if (toPiece.isSameTeam(currentTeam)) {
+        if (toPiece != null && toPiece.isSameTeam(currentTeam)) {
             throw new IllegalArgumentException("이미 도착지점에 플레이어님의 진영 기물이 있습니다.");
         }
     }

@@ -16,10 +16,6 @@ public abstract class Piece {
         return team == otherTeam;
     }
 
-    public boolean isEmpty() {
-        return false;
-    }
-
     public Team findTeam() {
         return team;
     }
@@ -34,13 +30,10 @@ public abstract class Piece {
         return team.findPrefix() + toString();
     }
 
-
     @Override
     public abstract String toString();
 
     public abstract int score();
 
     public abstract PieceType pieceType();
-
-
 }

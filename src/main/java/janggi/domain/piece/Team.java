@@ -2,8 +2,7 @@ package janggi.domain.piece;
 
 public enum Team {
     CHO("초", "C"),
-    HAN("한", "H"),
-    OTHER("빈", " ");
+    HAN("한", "H");
 
     private final String name;
     private final String prefix;

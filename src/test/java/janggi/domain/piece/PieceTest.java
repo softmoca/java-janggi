@@ -49,12 +49,6 @@ class PieceTest {
     }
 
     @Test
-    void 빈칸의_점수는_0이다() {
-        Piece piece = new EmptyPosition(Team.OTHER);
-        assertThat(piece.score()).isEqualTo(0);
-    }
-
-    @Test
     void 각_기물은_자신의_타입을_알고_있다() {
         assertThat(new Tank(Team.HAN).pieceType()).isEqualTo(PieceType.TANK);
         assertThat(new Horse(Team.HAN).pieceType()).isEqualTo(PieceType.HORSE);
@@ -64,6 +58,4 @@ class PieceTest {
         assertThat(new Cannon(Team.HAN).pieceType()).isEqualTo(PieceType.CANNON);
         assertThat(new Soldier(Team.HAN).pieceType()).isEqualTo(PieceType.SOLDIER);
     }
-
-
 }
