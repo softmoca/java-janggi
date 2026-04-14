@@ -3,6 +3,7 @@ package janggi.domain.moveRule;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import janggi.domain.Board;
+import janggi.domain.palace.Palaces;
 import janggi.domain.piece.Soldier;
 import janggi.domain.piece.Team;
 import janggi.domain.vo.Position;
@@ -13,6 +14,7 @@ class HorseMoveRuleTest {
     private Board board = Board.empty();
     private Position from;
     private Position to;
+    private final Palaces palaces = Palaces.standard();
     private final MoveRule moveRule = new HorseMoveRule();
 
     @Test
@@ -20,7 +22,7 @@ class HorseMoveRuleTest {
         from = new Position(0, 0);
         to = new Position(2, 1);
 
-        assertThat(moveRule.canMove(from, to, board)).isTrue();
+        assertThat(moveRule.canMove(from, to, board, palaces)).isTrue();
     }
 
     @Test
@@ -28,7 +30,7 @@ class HorseMoveRuleTest {
         from = new Position(0, 0);
         to = new Position(3, 3);
 
-        assertThat(moveRule.canMove(from, to, board)).isFalse();
+        assertThat(moveRule.canMove(from, to, board, palaces)).isFalse();
     }
 
     @Test
@@ -40,6 +42,6 @@ class HorseMoveRuleTest {
         from = new Position(0, 0);
         to = new Position(2, 1);
 
-        assertThat(moveRule.canMove(from, to, board)).isFalse();
+        assertThat(moveRule.canMove(from, to, board, palaces)).isFalse();
     }
 }

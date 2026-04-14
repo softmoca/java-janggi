@@ -3,6 +3,7 @@ package janggi.domain.moveRule;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import janggi.domain.Board;
+import janggi.domain.palace.Palaces;
 import janggi.domain.piece.Soldier;
 import janggi.domain.piece.Team;
 import janggi.domain.vo.Position;
@@ -14,14 +15,14 @@ class TankMoveRuleTest {
     private Position from;
     private Position to;
     private MoveRule moveRule = new TankMoveRule();
-
+    private final Palaces palaces = Palaces.standard();
 
     @Test
     void 도착지점이_출발지점과_같은_행이면_정상적으로_이동한다() {
         from = new Position(0, 0);
         to = new Position(0, 2);
 
-        assertThat(moveRule.canMove(from, to, board)).isTrue();
+        assertThat(moveRule.canMove(from, to, board, palaces)).isTrue();
     }
 
     @Test
@@ -29,7 +30,7 @@ class TankMoveRuleTest {
         from = new Position(0, 0);
         to = new Position(2, 0);
 
-        assertThat(moveRule.canMove(from, to, board)).isTrue();
+        assertThat(moveRule.canMove(from, to, board, palaces)).isTrue();
     }
 
 
@@ -38,7 +39,7 @@ class TankMoveRuleTest {
         from = new Position(0, 0);
         to = new Position(3, 3);
 
-        assertThat(moveRule.canMove(from, to, board)).isFalse();
+        assertThat(moveRule.canMove(from, to, board, palaces)).isFalse();
     }
 
     @Test
@@ -50,7 +51,7 @@ class TankMoveRuleTest {
         from = new Position(0, 0);
         to = new Position(0, 3);
 
-        assertThat(moveRule.canMove(from, to, board)).isFalse();
+        assertThat(moveRule.canMove(from, to, board, palaces)).isFalse();
     }
 
     // 궁성 대각선
@@ -59,7 +60,7 @@ class TankMoveRuleTest {
     void 궁성_중앙에서_꼭짓점으로_대각선_1칸_이동_가능() {
         from = new Position(1, 4);
         to = new Position(0, 3);
-        assertThat(moveRule.canMove(from, to, board)).isTrue();
+        assertThat(moveRule.canMove(from, to, board, palaces)).isTrue();
     }
 
     @Test
@@ -67,7 +68,7 @@ class TankMoveRuleTest {
         // (0,3) → (2,5), 중간 (1,4) 비어있음
         from = new Position(0, 3);
         to = new Position(2, 5);
-        assertThat(moveRule.canMove(from, to, board)).isTrue();
+        assertThat(moveRule.canMove(from, to, board, palaces)).isTrue();
     }
 
     @Test
@@ -77,14 +78,14 @@ class TankMoveRuleTest {
         ));
         from = new Position(0, 3);
         to = new Position(2, 5);
-        assertThat(moveRule.canMove(from, to, board)).isFalse();
+        assertThat(moveRule.canMove(from, to, board, palaces)).isFalse();
     }
 
     @Test
     void 궁성_밖에서는_대각선_이동_불가() {
         from = new Position(4, 4);
         to = new Position(5, 5);
-        assertThat(moveRule.canMove(from, to, board)).isFalse();
+        assertThat(moveRule.canMove(from, to, board, palaces)).isFalse();
     }
 
 

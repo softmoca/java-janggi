@@ -3,6 +3,7 @@ package janggi.domain.moveRule;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import janggi.domain.Board;
+import janggi.domain.palace.Palaces;
 import janggi.domain.piece.Cannon;
 import janggi.domain.piece.Soldier;
 import janggi.domain.piece.Team;
@@ -14,6 +15,7 @@ import org.junit.jupiter.api.Test;
 class CannonMoveRuleTest {
 
     private Board board = Board.empty();
+    private final Palaces palaces = Palaces.standard();
     private final MoveRule moveRule = new CannonMoveRule();
 
     @Test
@@ -22,12 +24,12 @@ class CannonMoveRuleTest {
                 new Position(0, 1), new Soldier(Team.HAN)
         ));
 
-        assertThat(moveRule.canMove(new Position(0, 0), new Position(0, 6), board)).isTrue();
+        assertThat(moveRule.canMove(new Position(0, 0), new Position(0, 6), board, palaces)).isTrue();
     }
 
     @Test
     void 넘을기물이_없으면_이동할수없다() {
-        assertThat(moveRule.canMove(new Position(0, 0), new Position(0, 5), board)).isFalse();
+        assertThat(moveRule.canMove(new Position(0, 0), new Position(0, 5), board, palaces)).isFalse();
     }
 
     @Test
@@ -37,7 +39,7 @@ class CannonMoveRuleTest {
                 new Position(0, 3), new Soldier(Team.HAN)
         ));
 
-        assertThat(moveRule.canMove(new Position(0, 0), new Position(0, 6), board)).isFalse();
+        assertThat(moveRule.canMove(new Position(0, 0), new Position(0, 6), board, palaces)).isFalse();
     }
 
     @Test
@@ -45,7 +47,7 @@ class CannonMoveRuleTest {
         Board board = Board.of(Map.of(
                 new Position(5, 2), new Cannon(Team.HAN)
         ));
-        assertThat(moveRule.canMove(new Position(5, 0), new Position(5, 6), board)).isFalse();
+        assertThat(moveRule.canMove(new Position(5, 0), new Position(5, 6), board, palaces)).isFalse();
     }
 
     @Test
@@ -55,7 +57,7 @@ class CannonMoveRuleTest {
                 new Position(0, 6), new Cannon(Team.HAN)
         ));
 
-        assertThat(moveRule.canMove(new Position(0, 0), new Position(0, 6), board)).isFalse();
+        assertThat(moveRule.canMove(new Position(0, 0), new Position(0, 6), board, palaces)).isFalse();
     }
 
     // 궁성 대각선
@@ -65,7 +67,7 @@ class CannonMoveRuleTest {
                 new Position(1, 4), new Soldier(Team.HAN)
         ));
         assertThat(moveRule.canMove(
-                new Position(0, 3), new Position(2, 5), board)).isTrue();
+                new Position(0, 3), new Position(2, 5), board, palaces)).isTrue();
     }
 
     @Test
@@ -74,14 +76,14 @@ class CannonMoveRuleTest {
                 new Position(8, 4), new Soldier(Team.CHO)
         ));
         assertThat(moveRule.canMove(
-                new Position(7, 3), new Position(9, 5), board)).isTrue();
+                new Position(7, 3), new Position(9, 5), board, palaces)).isTrue();
     }
 
     @Test
         // 아래 테스트들 PR
     void 궁성_대각선_2칸_이동시_중간에_기물_없으면_이동_불가() {
         assertThat(moveRule.canMove(
-                new Position(0, 3), new Position(2, 5), board)).isFalse();
+                new Position(0, 3), new Position(2, 5), board, palaces)).isFalse();
     }
 
     @Test
@@ -90,7 +92,7 @@ class CannonMoveRuleTest {
                 new Position(1, 4), new Cannon(Team.CHO)
         ));
         assertThat(moveRule.canMove(
-                new Position(0, 3), new Position(2, 5), board)).isFalse();
+                new Position(0, 3), new Position(2, 5), board, palaces)).isFalse();
     }
 
     @Test
@@ -100,13 +102,13 @@ class CannonMoveRuleTest {
                 new Position(2, 5), new Cannon(Team.CHO)
         ));
         assertThat(moveRule.canMove(
-                new Position(0, 3), new Position(2, 5), board)).isFalse();
+                new Position(0, 3), new Position(2, 5), board, palaces)).isFalse();
     }
 
     @Test
     void 궁성_대각선_1칸은_넘을_기물이_없으므로_이동_불가() {
         assertThat(moveRule.canMove(
-                new Position(1, 4), new Position(0, 3), board)).isFalse();
+                new Position(1, 4), new Position(0, 3), board, palaces)).isFalse();
     }
 
 

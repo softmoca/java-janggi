@@ -2,6 +2,7 @@ package janggi.domain.piece;
 
 import janggi.domain.BoardView;
 import janggi.domain.moveRule.MoveRule;
+import janggi.domain.palace.Palaces;
 import janggi.domain.vo.Position;
 
 public abstract class Piece {
@@ -23,8 +24,8 @@ public abstract class Piece {
         return team;
     }
 
-    public boolean canMove(Position from, Position to, BoardView board) {
-        return moveRule().canMove(from, to, board);
+    public boolean canMove(Position from, Position to, BoardView board, Palaces palaces) {
+        return moveRule().canMove(from, to, board, palaces);
     }
 
     protected abstract MoveRule moveRule();

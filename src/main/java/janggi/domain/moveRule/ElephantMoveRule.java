@@ -1,6 +1,7 @@
 package janggi.domain.moveRule;
 
 import janggi.domain.BoardView;
+import janggi.domain.palace.Palaces;
 import janggi.domain.vo.BoardSize;
 import janggi.domain.vo.Position;
 import java.util.List;
@@ -19,8 +20,9 @@ public class ElephantMoveRule implements MoveRule {
             new int[]{-3, -2, 0, -1, -1, -2}   // 위3 왼2, 막힘1(0,-1) 막힘2(-1,-2)
     );
 
+    // ElephantMoveRule
     @Override
-    public boolean canMove(Position from, Position to, BoardView board) {
+    public boolean canMove(Position from, Position to, BoardView board, Palaces palaces) {
         for (int[] pattern : MOVE_PATTERNS) {
             if (matchesPattern(from, to, pattern) && isNotBlockedPath(from, pattern, board)) {
                 return true;

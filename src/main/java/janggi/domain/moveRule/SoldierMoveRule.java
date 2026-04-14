@@ -1,6 +1,7 @@
 package janggi.domain.moveRule;
 
 import janggi.domain.BoardView;
+import janggi.domain.palace.Palaces;
 import janggi.domain.piece.Team;
 import janggi.domain.vo.Position;
 
@@ -13,7 +14,7 @@ public final class SoldierMoveRule implements MoveRule {
     }
 
     @Override
-    public boolean canMove(Position from, Position to, BoardView board) {
+    public boolean canMove(Position from, Position to, BoardView board, Palaces palaces) {
         int rowDis = to.getRow() - from.getRow();
         int colDis = to.getCol() - from.getCol();
 
@@ -21,11 +22,9 @@ public final class SoldierMoveRule implements MoveRule {
             return true;
         }
 
-        return isForwardDiagonalInPalace(from, to, rowDis, board);
+        return isForwardDiagonalInPalace(from, to, rowDis, palaces);
     }
 
-    // 한이 위쪽배치임 -> 행증가가 전진
-    // 초가아래 배치 ->   행 감소가 전진
     private boolean isForward(int rowDis, int colDis) {
         int forwardDirection = (team == Team.CHO) ? -1 : 1;
         return rowDis == forwardDirection && colDis == 0;
@@ -35,12 +34,11 @@ public final class SoldierMoveRule implements MoveRule {
         return rowDis == 0 && Math.abs(colDis) == 1;
     }
 
-    private boolean isForwardDiagonalInPalace(Position from, Position to, int rowDis, BoardView board) {
-        if (!board.canMoveDiagonallyInPalace(from, to)) {
+    private boolean isForwardDiagonalInPalace(Position from, Position to, int rowDis, Palaces palaces) {
+        if (!palaces.canMoveDiagonally(from, to)) {
             return false;
         }
         int forwardDirection = (team == Team.CHO) ? -1 : 1;
         return rowDis == forwardDirection;
     }
-
 }

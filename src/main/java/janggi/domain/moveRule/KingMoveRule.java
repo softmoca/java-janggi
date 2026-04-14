@@ -1,16 +1,17 @@
 package janggi.domain.moveRule;
 
 import janggi.domain.BoardView;
+import janggi.domain.palace.Palaces;
 import janggi.domain.vo.Position;
 
 public class KingMoveRule implements MoveRule {
 
     @Override
-    public boolean canMove(Position from, Position to, BoardView board) {
-        if (!board.isInsidePalace(from) || !board.isInsidePalace(to)) {
+    public boolean canMove(Position from, Position to, BoardView board, Palaces palaces) {
+        if (!palaces.isInsideAnyPalace(from) || !palaces.isInsideAnyPalace(to)) {
             return false;
         }
-        return isStraightOneStep(from, to) || board.canMoveDiagonallyInPalace(from, to);
+        return isStraightOneStep(from, to) || palaces.canMoveDiagonally(from, to);
     }
 
     private boolean isStraightOneStep(Position from, Position to) {

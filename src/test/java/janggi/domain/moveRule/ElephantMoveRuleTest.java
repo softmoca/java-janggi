@@ -3,6 +3,7 @@ package janggi.domain.moveRule;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import janggi.domain.Board;
+import janggi.domain.palace.Palaces;
 import janggi.domain.piece.Soldier;
 import janggi.domain.piece.Team;
 import janggi.domain.vo.Position;
@@ -15,13 +16,14 @@ class ElephantMoveRuleTest {
     private Position from;
     private Position to;
     private final MoveRule moveRule = new ElephantMoveRule();
+    private final Palaces palaces = Palaces.standard();
 
     @Test
     void 직선_1칸_후_대각_2칸_이동할_수_있다() {
         from = new Position(0, 0);
         to = new Position(2, 3);
 
-        assertThat(moveRule.canMove(from, to, board)).isTrue();
+        assertThat(moveRule.canMove(from, to, board, palaces)).isTrue();
     }
 
 
@@ -33,7 +35,7 @@ class ElephantMoveRuleTest {
         from = new Position(0, 0);
         to = new Position(1, 3);
 
-        assertThat(moveRule.canMove(from, to, board)).isFalse();
+        assertThat(moveRule.canMove(from, to, board, palaces)).isFalse();
     }
 
     @Test
@@ -45,7 +47,7 @@ class ElephantMoveRuleTest {
         from = new Position(0, 0);
         to = new Position(1, 3);
 
-        assertThat(moveRule.canMove(from, to, board)).isFalse();
+        assertThat(moveRule.canMove(from, to, board, palaces)).isFalse();
     }
 
 }

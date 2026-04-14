@@ -1,5 +1,6 @@
 package janggi.domain;
 
+import janggi.domain.palace.Palaces;
 import janggi.domain.piece.EmptyPosition;
 import janggi.domain.piece.Piece;
 import janggi.domain.piece.Team;
@@ -10,17 +11,19 @@ import java.util.Map;
 
 public class Board implements BoardView {
     private final List<List<Piece>> board;
+    private final Palaces palaces;
 
     public Board() {
-        board = BoardInitializer.createBoard();
+        this(BoardInitializer.createBoard(), Palaces.standard());
     }
 
-    private Board(List<List<Piece>> board) {
+    private Board(List<List<Piece>> board, Palaces palaces) {
         this.board = board;
+        this.palaces = palaces;
     }
 
     public static Board empty() {
-        return new Board(BoardInitializer.createEmptyBoard());
+        return new Board(BoardInitializer.createEmptyBoard(), Palaces.standard());
     }
 
     public static Board of(Map<Position, Piece> pieces) {
@@ -30,7 +33,6 @@ public class Board implements BoardView {
         }
         return board;
     }
-
 
     @Override
     public Piece findByPosition(Position position) {
@@ -44,24 +46,8 @@ public class Board implements BoardView {
         return findByPosition(position).isEmpty();
     }
 
-    @Override
-    public boolean isInsidePalace(Position position) {
-        return PalaceRule.isInsidePalace(position);
-    }
-
-    @Override
-    public boolean canMoveDiagonallyInPalace(Position from, Position to) {
-        return PalaceRule.canMoveDiagonally(from, to);
-    }
-
-    @Override
-    public boolean isDiagonalInPalace(Position from, Position to) {
-        return PalaceRule.isDiagonalInPalace(from, to);
-    }
-
-    @Override
-    public Position getDiagonalMidpointInPalace(Position from, Position to) {
-        return PalaceRule.getDiagonalMidpoint(from, to);
+    public Palaces palaces() {
+        return palaces;
     }
 
     public Piece move(Position from, Position to, Team currentTeam) {
@@ -70,7 +56,7 @@ public class Board implements BoardView {
 
         validateCommonMove(currentTeam, fromPiece, toPiece);
 
-        if (!fromPiece.canMove(from, to, this)) {
+        if (!fromPiece.canMove(from, to, this, palaces)) {
             throw new IllegalArgumentException("해당 기물의 이동 규칙에 맞지 않습니다.");
         }
 
@@ -111,9 +97,6 @@ public class Board implements BoardView {
         return totalScore;
     }
 
-
-    // 빈곳은 db에 따로 저장안하려는데....
-    // board 자료구조 자체가 map이었으면.....
     public Map<Position, Piece> findAllPieces() {
         Map<Position, Piece> pieces = new HashMap<>();
         for (int row = 0; row < board.size(); row++) {
@@ -127,6 +110,4 @@ public class Board implements BoardView {
         }
         return pieces;
     }
-
-
 }

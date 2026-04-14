@@ -1,6 +1,7 @@
 package janggi.domain.moveRule;
 
 import janggi.domain.BoardView;
+import janggi.domain.palace.Palaces;
 import janggi.domain.piece.Cannon;
 import janggi.domain.piece.Piece;
 import janggi.domain.vo.Position;
@@ -8,32 +9,28 @@ import janggi.domain.vo.Position;
 public class CannonMoveRule implements MoveRule {
 
     @Override
-    public boolean canMove(Position from, Position to, BoardView board) {
+    public boolean canMove(Position from, Position to, BoardView board, Palaces palaces) {
         if (isStraightLine(from, to)) {
             return canMoveStraight(from, to, board);
         }
-        if (board.isDiagonalInPalace(from, to)) {
-            return canMovePalaceDiagonal(from, to, board);
+        if (palaces.isDiagonalPath(from, to)) {
+            return canMovePalaceDiagonal(from, to, board, palaces);
         }
-
-        return true;
+        return false;
     }
 
-    private boolean canMovePalaceDiagonal(Position from, Position to, BoardView board) {
-        Position midpoint = board.getDiagonalMidpointInPalace(from, to);
+    private boolean canMovePalaceDiagonal(Position from, Position to, BoardView board, Palaces palaces) {
+        Position midpoint = palaces.diagonalMidpoint(from, to);
         if (midpoint == null) {
             return false;
         }
-
         if (board.isEmptyPosition(midpoint)) {
             return false;
         }
-
         Piece bridgePiece = board.findByPosition(midpoint);
         Piece targetPiece = board.findByPosition(to);
         return !isCannon(bridgePiece) && !isCannon(targetPiece);
     }
-
 
     private boolean canMoveStraight(Position from, Position to, BoardView board) {
         int fromRow = from.getRow();
@@ -50,7 +47,6 @@ public class CannonMoveRule implements MoveRule {
         Piece targetPiece = board.findByPosition(to);
         return !isCannon(bridgePiece) && !isCannon(targetPiece);
     }
-
 
     private boolean isStraightLine(Position from, Position to) {
         return from.getRow() == to.getRow() || from.getCol() == to.getCol();
@@ -111,5 +107,4 @@ public class CannonMoveRule implements MoveRule {
     private boolean isCannon(Piece piece) {
         return piece instanceof Cannon;
     }
-
 }

@@ -1,6 +1,7 @@
 package janggi.domain.moveRule;
 
 import janggi.domain.BoardView;
+import janggi.domain.palace.Palaces;
 import janggi.domain.vo.BoardSize;
 import janggi.domain.vo.Position;
 import java.util.List;
@@ -20,7 +21,7 @@ public class HorseMoveRule implements MoveRule {
     );
 
     @Override
-    public boolean canMove(Position from, Position to, BoardView board) {
+    public boolean canMove(Position from, Position to, BoardView board, Palaces palaces) {
         for (int[] pattern : MOVE_PATTERNS) {
             if (matchesPattern(from, to, pattern) && isNotBlocked(from, pattern, board)) {
                 return true;

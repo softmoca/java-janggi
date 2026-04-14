@@ -1,22 +1,24 @@
 package janggi.domain.moveRule;
 
 import janggi.domain.BoardView;
+import janggi.domain.palace.Palaces;
 import janggi.domain.vo.Position;
 
 public class TankMoveRule implements MoveRule {
+
     @Override
-    public boolean canMove(Position from, Position to, BoardView board) {
+    public boolean canMove(Position from, Position to, BoardView board, Palaces palaces) {
         if (isStraightLine(from, to)) {
             return isStraightPathClear(board, from, to);
         }
-        if (board.isDiagonalInPalace(from, to)) {
-            return isDiagonalPathClear(board, from, to);
+        if (palaces.isDiagonalPath(from, to)) {
+            return isDiagonalPathClear(board, palaces, from, to);
         }
         return false;
     }
 
-    private boolean isDiagonalPathClear(BoardView board, Position from, Position to) {
-        Position midpoint = board.getDiagonalMidpointInPalace(from, to);
+    private boolean isDiagonalPathClear(BoardView board, Palaces palaces, Position from, Position to) {
+        Position midpoint = palaces.diagonalMidpoint(from, to);
         if (midpoint == null) {
             return true;
         }
@@ -26,7 +28,6 @@ public class TankMoveRule implements MoveRule {
     private boolean isStraightLine(Position from, Position to) {
         return from.getRow() == to.getRow() || from.getCol() == to.getCol();
     }
-
 
     private boolean isStraightPathClear(BoardView board, Position from, Position to) {
         int fromRow = from.getRow();
@@ -39,7 +40,6 @@ public class TankMoveRule implements MoveRule {
         }
         return isVerticalPathClear(board, fromCol, fromRow, toRow);
     }
-
 
     private boolean isHorizontalPathClear(BoardView board, int row, int fromCol, int toCol) {
         int start = Math.min(fromCol, toCol);
